@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite dev --port 5000",
     "build": "vite build",
-    "build:gh-pages": "VITE_BASE_PATH=/HabitFlowTrackerPWA/ vite build",
+    "build:gh-pages": "VITE_BASE_PATH=/excellence-habit-tracker/ vite build",
+    "deploy": "pnpm run build:gh-pages && gh-pages -d dist",
     "preview": "vite preview --port 5000",
     "check": "tsc"
   },
@@ -76,6 +77,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14",
     "typescript": "5.6.3",
