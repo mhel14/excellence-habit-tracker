@@ -9,7 +9,7 @@ import viteCompression from "vite-plugin-compression";
 export default defineConfig({
   // Base path for GitHub Pages deployment
   // Set VITE_BASE_PATH env variable to your repo name (e.g., /HabitFlowTrackerPWA/)
-  base: process.env.VITE_BASE_PATH || "/",
+  base: "excellence-habit-tracker/",
   plugins: [
     react(),
     runtimeErrorOverlay(),
