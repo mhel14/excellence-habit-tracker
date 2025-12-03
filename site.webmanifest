@@ -3,6 +3,7 @@
   "short_name": "Excellence",
   "description": "Track daily, weekly, and monthly habits with ease, to achieve excellence 1% better every day. ",
   "start_url": "/excellence-habit-tracker/",
+  "scope": "/excellence-habit-tracker/",
   "orientation": "portrait",
   "icons": [
     {
