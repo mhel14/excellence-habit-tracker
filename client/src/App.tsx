@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { Switch, Route } from "wouter";
+import { lazy, Suspense, useEffect } from "react";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
@@ -17,18 +17,45 @@ const JournalPage = lazy(() => import("@/pages/journal"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 function Router() {
+  // Get the base path from Vite's environment and remove trailing slash
+  // to prevent double slashes when wouter concatenates base + route path
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") || "/";
+
+  // Add this to your app temporarily to debug:
+  useEffect(() => {
+    // Check manifest
+    fetch('/excellence-habit-tracker/manifest.json')
+      .then(r => r.json())
+      .then(data => console.log('Manifest:', data))
+      .catch(e => console.error('Manifest error:', e));
+
+    // Check SW
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration()
+        .then(reg => console.log('SW Registration:', reg))
+        .catch(e => console.error('SW error:', e));
+    }
+
+    // Listen for install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('Install prompt available!', e);
+    });
+  }, []);
+
   return (
-    <Layout>
-      <Suspense fallback={<LoadingSpinner />}>
-        <Switch>
-          <Route path="/" component={Dashboard} />
-          <Route path="/todo" component={TodoPage} />
-          <Route path="/journal" component={JournalPage} />
-          <Route path="/stats" component={Stats} />
-          <Route component={NotFound} />
-        </Switch>
-      </Suspense>
-    </Layout>
+    <WouterRouter base={base}>
+      <Layout>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Switch>
+            <Route path="/" component={Dashboard} />
+            <Route path="/todo" component={TodoPage} />
+            <Route path="/journal" component={JournalPage} />
+            <Route path="/stats" component={Stats} />
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </Layout>
+    </WouterRouter>
   );
 }
 

@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/excellence-habit-tracker/dev-sw.js?dev-sw', { scope: '/excellence-habit-tracker/', type: 'module' })

@@ -5,16 +5,68 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { metaImagesPlugin } from "./vite-plugin-meta-images";
 import viteCompression from "vite-plugin-compression";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   // Base path for GitHub Pages deployment
-  // Set VITE_BASE_PATH env variable to your repo name (e.g., /HabitFlowTrackerPWA/)
-  base: "excellence-habit-tracker/",
+  // Set VITE_BASE_PATH env variable to your repo name (e.g., /excellence-habit-tracker/)
+  base: process.env.VITE_BASE_PATH || "/excellence-habit-tracker/",
   plugins: [
     react(),
     runtimeErrorOverlay(),
     tailwindcss(),
     metaImagesPlugin(),
+    // PWA Plugin Configuration
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 365 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          }
+        ]
+      },
+      manifest: {
+        name: 'Excellence - Daily Habit Tracker',
+        short_name: 'Excellence',
+        description: 'Track daily, weekly, and monthly habits with ease, to achieve excellence 1% better every day.',
+        theme_color: '#3db887',
+        background_color: '#f5f7fa',
+        display: 'standalone',
+        orientation: 'portrait',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          {
+            src: '/web-app-manifest-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: '/web-app-manifest-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
+      }
+    }),
     // Compression for production builds
     viteCompression({
       algorithm: "brotliCompress",
